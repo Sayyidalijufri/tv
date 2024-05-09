@@ -1,16 +1,16 @@
 "use client";
 import React, { useState } from "react";
 import CategoryPills from "./CategoryPills";
-import { categories } from "@/app/page";
+import { Categories } from "@/categories";
 
 type Props = {};
 
 function CategoryHeader({}: Props) {
-  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+  const [selectedCategory, setSelectedCategory] = useState(Categories[0]);
   return (
     <div className="sticky top-0 bg-white z-10 pb-4">
       <CategoryPills
-        categories={categories}
+        categories={Categories}
         selectedCategory={selectedCategory}
         onSelect={setSelectedCategory}
       />
