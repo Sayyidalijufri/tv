@@ -135,7 +135,7 @@ async function Page({ searchParams }: Props) {
       </div>
       <ul className="flex flex-col gap-6 mt-10">
         {data[1]?.contents?.twoColumnWatchNextResults?.secondaryResults?.secondaryResults?.results?.map(
-          (result, index) => {
+          (result: { compactVideoRenderer: any; }, index: any) => {
             const video = result?.compactVideoRenderer;
             if (!video) return null; // Skip this item if it doesn't have compactVideoRenderer
 
