@@ -10,51 +10,6 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
-interface SecondaryResult {
-  compactVideoRenderer?: {
-    videoId: string;
-    thumbnail: {
-      thumbnails: {
-        url: string;
-        width: number;
-        height: number;
-      }[];
-    };
-    title: {
-      simpleText: string;
-    };
-    lengthText: {
-      simpleText: string;
-    };
-    shortViewCountText: {
-      accessibility: {
-        accessibilityData: {
-          label: string;
-        };
-      };
-    };
-    publishedTimeText: {
-      simpleText: string;
-    };
-    longBylineText: {
-      runs: {
-        text: string;
-        navigationEndpoint: {
-          browseEndpoint: {
-            browseId: string;
-          };
-        };
-      }[];
-    };
-    channelThumbnail: {
-      thumbnails: {
-        url: string;
-      }[];
-    };
-  };
-}
-
 type Props = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
@@ -86,7 +41,6 @@ async function Page({ searchParams }: Props) {
     await getRelatedVideo(),
     await getVideoDetail(),
   ]);
-
   return (
     <div className="px-8 pb-4 w-full overflow-x-hidden max-w-7xl md:grid gap-3 grid-cols-[1fr_400px]">
       <div className="flex flex-col gap-4">
@@ -119,10 +73,19 @@ async function Page({ searchParams }: Props) {
               <div className="flex items-start gap-4">
                 <div className="flex flex-col">
                   <h2 className="font-semibold">
-                    {data[1]?.contents?.twoColumnWatchNextResults?.results?.results?.contents?.[1]?.videoSecondaryInfoRenderer?.owner?.videoOwnerRenderer?.title?.runs?.[0]?.text}
+                    {
+                      data[1]?.contents?.twoColumnWatchNextResults?.results
+                        ?.results?.contents?.[1]?.videoSecondaryInfoRenderer
+                        ?.owner?.videoOwnerRenderer?.title?.runs?.[0]?.text
+                    }
                   </h2>
                   <span className="text-sm text-secondary-text">
-                    {data[1]?.contents?.twoColumnWatchNextResults?.results?.results?.contents?.[1]?.videoSecondaryInfoRenderer?.owner?.videoOwnerRenderer?.subscriberCountText?.simpleText}
+                    {
+                      data[1]?.contents?.twoColumnWatchNextResults?.results
+                        ?.results?.contents?.[1]?.videoSecondaryInfoRenderer
+                        ?.owner?.videoOwnerRenderer?.subscriberCountText
+                        ?.simpleText
+                    }
                   </span>
                 </div>
                 <Button variant="dark" className="text-sm px-4 rounded-full">
@@ -172,9 +135,9 @@ async function Page({ searchParams }: Props) {
       </div>
       <ul className="flex flex-col gap-6 mt-10">
         {data[1]?.contents?.twoColumnWatchNextResults?.secondaryResults?.secondaryResults?.results?.map(
-          (result: SecondaryResult, index) => {
+          (result, index) => {
             const video = result?.compactVideoRenderer;
-            if (!video) return null;
+            if (!video) return null; // Skip this item if it doesn't have compactVideoRenderer
 
             return (
               <li
@@ -202,40 +165,39 @@ async function Page({ searchParams }: Props) {
                 <div className="flex flex-1 flex-col gap-1">
                   <h2 className="text-lg line-clamp-2">
                     {video?.title?.simpleText}
-</div>
-</Link>
-<div className="flex flex-1 flex-col gap-1">
-<h2 className="text-lg line-clamp-2">
-{video?.title?.simpleText}
-</h2>
-<span className="text-sm text-secondary-text">
-{video?.shortViewCountText?.accessibility
-?.accessibilityData?.label}{" "}
-• {video?.publishedTimeText?.simpleText}
-</span>
-<Link
-href={/channel/${video?.longBylineText?.runs[0]?.navigationEndpoint?.browseEndpoint?.browseId}}
->
-<div className="flex items-center gap-2 my-2">
-<Image
-                     src={video?.channelThumbnail?.thumbnails[0]?.url}
-                     width={24}
-                     height={24}
-                     alt="channel_avatar"
-                     className="rounded-full"
-                   />
-<span className="text-sm text-secondary-text line-clamp-1">
-{video?.longBylineText?.runs[0]?.text}
-</span>
-</div>
-</Link>
-</div>
-</li>
-);
+                  </h2>
+                  <span className="text-sm text-secondary-text">
+                    {/* {video?.viewCountText?.simpleText} •{" "} */}
+                    {
+                      video?.shortViewCountText?.accessibility
+                        ?.accessibilityData?.label
+                    }{" "}
+                    • {video?.publishedTimeText?.simpleText}
+                  </span>
+                  <Link
+                    href={`/channel/${video?.longBylineText?.runs[0]?.navigationEndpoint?.browseEndpoint?.browseId}`}
+                  >
+                    <div className="flex items-center gap-2 my-2">
+                      <Image
+                        src={video?.channelThumbnail?.thumbnails[0]?.url}
+                        width={24}
+                        height={24}
+                        alt="channel_avatar"
+                        className="rounded-full"
+                      />
+                      <span className="text-sm text-secondary-text line-clamp-1">
+                        {video?.longBylineText?.runs[0]?.text}
+                      </span>
+                    </div>
+                  </Link>
+                </div>
+              </li>
+            );
+          }
+        )}
+      </ul>
+    </div>
+  );
 }
-)}
-</ul>
-</div>
-);
-}
+
 export default Page;
