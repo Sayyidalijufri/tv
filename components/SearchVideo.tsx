@@ -15,7 +15,7 @@ function SearchVideo({ data }: Props) {
         className="flex justify-center items-center relative w-full md:max-w-[500px] flex-1"
       >
         <Image
-          src={`https://i.ytimg.com/vi/${data?.videoId}/hq720.jpg`}
+          src={data?.videoThumbnail as string}
           width={500}
           height={281}
           alt="video_thumbnail"

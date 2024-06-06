@@ -6,6 +6,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Button from "./Button";
 import { useSidebar } from "@/hooks/useSidebar";
 import { useRouter, useSearchParams } from "next/navigation";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
 type Props = {};
 
@@ -134,15 +135,25 @@ function PageHeader({}: Props) {
         >
           <Search />
         </Button>
-        <Button size="icon" variant="secondVariant" className="max-md:hidden">
-          <Upload />
-        </Button>
-        <Button size="icon" variant="secondVariant" className="max-md:hidden">
-          <Bell />
-        </Button>
-        <Button size="icon" variant="secondVariant">
-          <User />
-        </Button>
+        <div className="flex items-center">
+          <Button size="icon" variant="secondVariant" className="max-md:hidden">
+            <Upload />
+          </Button>
+          <Button size="icon" variant="secondVariant" className="max-md:hidden">
+            <Bell />
+          </Button>
+          <Button variant="secondVariant">
+            {/* <Button size="icon" variant="secondVariant"> */}
+            {/* <User /> */}
+            <SignedOut>
+              <SignInButton />
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+              {/* <SignOutButton /> */}
+            </SignedIn>
+          </Button>
+        </div>
       </div>
     </div>
   );

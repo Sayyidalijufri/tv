@@ -61,6 +61,7 @@ function SearchResultLists({ searchData }: Props) {
                     width={136}
                     height={136}
                     alt="channel_image"
+                    className="rounded-full"
                   />
                 </div>
                 <div className="flex items-center gap-3 w-full">

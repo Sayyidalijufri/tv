@@ -1,14 +1,22 @@
 "use client";
+import { PinnedVideo } from "@/types/Channel";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
-function ChannelPin({ data }: any) {
+type Props = {
+  data: PinnedVideo;
+};
+
+const URL_REGEX =
+  /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gm;
+
+function ChannelPin({ data }: Props) {
   const [videoUrl, setVideoUrl] = useState<any>();
   const [pinVideoReadMore, setPinVideoReadMore] = useState(false);
   useEffect(() => {
     const fetchVideo = async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/video/${data?.videoId}`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/video/${data.videoId}`
       );
       const videoStreamRes = await res.json();
       setVideoUrl(
@@ -24,7 +32,7 @@ function ChannelPin({ data }: any) {
   }, [data?.videoId]);
 
   return (
-    <div className="flex flex-col md:flex-row gap-5">
+    <div className="flex flex-col md:flex-row gap-5 mb-8">
       <video
         src={videoUrl || ""}
         className="aspect-video rounded-xl"
@@ -32,28 +40,23 @@ function ChannelPin({ data }: any) {
         autoPlay
       ></video>
       <div className="flex flex-col gap-1">
-        <h4 className="truncate font-semibold">
-          {data?.title?.runs?.[0]?.text}
-        </h4>
-        <p className="text-[#aaa] my-4">186,104 views • 8 months ago</p>
+        <h4 className="truncate font-semibold">{data.title}</h4>
+        <p className="text-[#aaa] my-4">
+          {data.viewCount} • {data.publishedTime}
+        </p>
         <p
           className={`font-medium ${
             !pinVideoReadMore && "line-clamp-5"
           } whitespace-pre-line`}
         >
-          {data?.description?.runs?.map((run: any) => {
-            const URL_REGEX =
-              /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
-
-            return run?.text.split(" ").map((text: any) =>
-              URL_REGEX.test(text) ? (
-                <Link key={text} href={text} className="text-sky-500">
-                  {text}{" "}
-                </Link>
-              ) : (
-                text + " "
-              )
-            );
+          {data.description?.split(" ").map((word) => {
+            return word.match(URL_REGEX)
+              ? word && (
+                  <Link key={word} href={word} className="text-sky-500">
+                    {word}{" "}
+                  </Link>
+                )
+              : word + " ";
           })}
         </p>
         <a

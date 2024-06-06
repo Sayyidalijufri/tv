@@ -3,10 +3,11 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import PageHeader from "@/components/PageHeader";
 import Sidebar from "@/components/Sidebar";
+import { ClerkProvider } from "@clerk/nextjs";
+// import { ClerkProvider } from "@clerk/nextjs/app-beta";
 
 const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
@@ -21,15 +22,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={poppins.className}>
-        <div className="max-h-screen flex flex-col">
-          <PageHeader />
-          <div className="grid grid-cols-[auto_1fr] flex-grow-1 overflow-auto">
-            <Sidebar />
-            {children}
+      <ClerkProvider>
+        <body className={poppins.className}>
+          <div className="max-h-screen flex flex-col">
+            <PageHeader />
+            <div className="grid grid-cols-[auto_1fr] flex-grow-1 overflow-auto">
+              <Sidebar />
+              {children}
+            </div>
           </div>
-        </div>
-      </body>
+        </body>
+      </ClerkProvider>
     </html>
   );
 }

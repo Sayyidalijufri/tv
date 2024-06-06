@@ -1,21 +1,35 @@
 "use client";
-import { Categories } from "@/categories";
 import CategoryPills from "@/components/CategoryPills";
-import HomeVideoItem from "@/components/HomeVideoItem";
+import GridVideoItem from "@/components/GridVideoItem";
 import { useState } from "react";
+
+export const categories = [
+  "All",
+  "JavaScript",
+  "TypeScript",
+  "Programming",
+  "Coding",
+  "Hacking",
+  "Next.js",
+  "React.js",
+  "Vite.js",
+  "Frontend Development",
+  "Backend Development",
+  "Full Stack Development",
+];
 export default function Home() {
-  const [selectedCategory, setSelectedCategory] = useState(Categories[0]);
+  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
   return (
     <div className="overflow-x-hidden px-8 pb-4">
       <div className="sticky top-0 bg-white z-10 pb-4">
         <CategoryPills
-          categories={Categories}
+          categories={categories}
           selectedCategory={selectedCategory}
           onSelect={setSelectedCategory}
         />
       </div>
       <div className="grid gap-4 md:grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
-        <HomeVideoItem
+        <GridVideoItem
           id="EzTxYQmU8OE"
           title="Web Developer Roadmap (2024) - Everything is Changing"
           channel={{

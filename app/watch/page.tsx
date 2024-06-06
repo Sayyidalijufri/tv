@@ -9,7 +9,7 @@ import {
   ThumbsUp,
 } from "lucide-react";
 import Image from "next/image";
-
+import Link from "next/link";
 type Props = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
@@ -29,12 +29,20 @@ async function Page({ searchParams }: Props) {
     const data = await res.json();
     return data;
   };
+  const getVideoDetail = async () => {
+    const res = await fetch(
+      `https://jamali-tv-backend.vercel.app/video/${searchParams.id}`
+    );
+    const data = await res.json();
+    return data;
+  };
   const data = await Promise.all([
     await getVideoInfo(),
     await getRelatedVideo(),
+    await getVideoDetail(),
   ]);
   return (
-    <div className="px-8 pb-4 w-full overflow-x-hidden max-w-7xl grid-cols-[1fr_400px]">
+    <div className="px-8 pb-4 w-full overflow-x-hidden max-w-7xl md:grid gap-3 grid-cols-[1fr_400px]">
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-4">
           <video
@@ -50,7 +58,7 @@ async function Page({ searchParams }: Props) {
           <h1 className="text-xl font-semibold">
             {data[0]?.videoDetails?.title}
           </h1>
-          <div className="flex items-start justify-between">
+          <div className="flex flex-col items-between justify-start gap-3">
             <div className="flex items-center gap-2">
               <Image
                 width={40}
@@ -85,7 +93,7 @@ async function Page({ searchParams }: Props) {
                 </Button>
               </div>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-4">
               <Button
                 variant={"secondVariant"}
                 className="bg-gray-100 flex rounded-full divide-x-2 divide-secondary-hover p-0"
@@ -121,9 +129,73 @@ async function Page({ searchParams }: Props) {
                 <span className="text-sm font-semibold">Save</span>
               </Button>
             </div>
+            <p className="whitespace-pre-line">{data[2].description}</p>
           </div>
         </div>
       </div>
+      <ul className="flex flex-col gap-6 mt-10">
+        {data[1]?.contents?.twoColumnWatchNextResults?.secondaryResults?.secondaryResults?.results?.map(
+          (result, index) => {
+            const video = result?.compactVideoRenderer;
+            if (!video) return null; // Skip this item if it doesn't have compactVideoRenderer
+
+            return (
+              <li
+                key={video.videoId}
+                className="flex flex-col md:flex-row items-start gap-4"
+              >
+                <Link
+                  href={`/watch?id=${video.videoId}`}
+                  className="flex justify-center items-center relative w-full md:max-w-[500px] flex-1"
+                >
+                  <Image
+                    src={
+                      video?.thumbnail?.thumbnails[1]?.url ||
+                      video?.thumbnail?.thumbnails[0]?.url
+                    }
+                    width={video?.thumbnail?.thumbnails[1]?.width || 336}
+                    height={video?.thumbnail?.thumbnails[1]?.height || 188}
+                    alt="video_thumbnail"
+                    className="rounded-xl w-full max-w-full"
+                  />
+                  <div className="absolute right-2 bottom-2 bg-black rounded-md text-white py-0.5 px-1.5 text-xs">
+                    {video?.lengthText?.simpleText}
+                  </div>
+                </Link>
+                <div className="flex flex-1 flex-col gap-1">
+                  <h2 className="text-lg line-clamp-2">
+                    {video?.title?.simpleText}
+                  </h2>
+                  <span className="text-sm text-secondary-text">
+                    {/* {video?.viewCountText?.simpleText} •{" "} */}
+                    {
+                      video?.shortViewCountText?.accessibility
+                        ?.accessibilityData?.label
+                    }{" "}
+                    • {video?.publishedTimeText?.simpleText}
+                  </span>
+                  <Link
+                    href={`/channel/${video?.longBylineText?.runs[0]?.navigationEndpoint?.browseEndpoint?.browseId}`}
+                  >
+                    <div className="flex items-center gap-2 my-2">
+                      <Image
+                        src={video?.channelThumbnail?.thumbnails[0]?.url}
+                        width={24}
+                        height={24}
+                        alt="channel_avatar"
+                        className="rounded-full"
+                      />
+                      <span className="text-sm text-secondary-text line-clamp-1">
+                        {video?.longBylineText?.runs[0]?.text}
+                      </span>
+                    </div>
+                  </Link>
+                </div>
+              </li>
+            );
+          }
+        )}
+      </ul>
     </div>
   );
 }
