@@ -1,14 +1,14 @@
-import { Poppins } from "next/font/google";
 import type { Metadata } from "next";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import PageHeader from "@/components/PageHeader";
 import Sidebar from "@/components/Sidebar";
 import { ClerkProvider } from "@clerk/nextjs";
+// import { ClerkProvider } from "@clerk/nextjs/app-beta";
 
-// Define the Poppins font with the required subsets
 const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-  subsets: ["latin"], // Add the required subsets here, e.g., "latin", "latin-ext", etc.
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {

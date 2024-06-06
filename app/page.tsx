@@ -3,24 +3,22 @@ import CategoryPills from "@/components/CategoryPills";
 import GridVideoItem from "@/components/GridVideoItem";
 import { useState } from "react";
 
+const categories = [
+  "All",
+  "JavaScript",
+  "TypeScript",
+  "Programming",
+  "Coding",
+  "Hacking",
+  "Next.js",
+  "React.js",
+  "Vite.js",
+  "Frontend Development",
+  "Backend Development",
+  "Full Stack Development",
+];
 export default function Home() {
-  const categories = [
-    "All",
-    "JavaScript",
-    "TypeScript",
-    "Programming",
-    "Coding",
-    "Hacking",
-    "Next.js",
-    "React.js",
-    "Vite.js",
-    "Frontend Development",
-    "Backend Development",
-    "Full Stack Development",
-  ];
-
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
-
   return (
     <div className="overflow-x-hidden px-8 pb-4">
       <div className="sticky top-0 bg-white z-10 pb-4">

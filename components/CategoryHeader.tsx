@@ -1,9 +1,23 @@
 "use client";
 import React, { useState } from "react";
 import CategoryPills from "./CategoryPills";
-import { categories } from "@/app/page";
 
 type Props = {};
+
+const categories = [
+  "All",
+  "JavaScript",
+  "TypeScript",
+  "Programming",
+  "Coding",
+  "Hacking",
+  "Next.js",
+  "React.js",
+  "Vite.js",
+  "Frontend Development",
+  "Backend Development",
+  "Full Stack Development",
+];
 
 function CategoryHeader({}: Props) {
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
