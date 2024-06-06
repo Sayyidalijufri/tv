@@ -10,6 +10,51 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+
+interface SecondaryResult {
+  compactVideoRenderer?: {
+    videoId: string;
+    thumbnail: {
+      thumbnails: {
+        url: string;
+        width: number;
+        height: number;
+      }[];
+    };
+    title: {
+      simpleText: string;
+    };
+    lengthText: {
+      simpleText: string;
+    };
+    shortViewCountText: {
+      accessibility: {
+        accessibilityData: {
+          label: string;
+        };
+      };
+    };
+    publishedTimeText: {
+      simpleText: string;
+    };
+    longBylineText: {
+      runs: {
+        text: string;
+        navigationEndpoint: {
+          browseEndpoint: {
+            browseId: string;
+          };
+        };
+      }[];
+    };
+    channelThumbnail: {
+      thumbnails: {
+        url: string;
+      }[];
+    };
+  };
+}
+
 type Props = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
@@ -135,7 +180,7 @@ async function Page({ searchParams }: Props) {
       </div>
       <ul className="flex flex-col gap-6 mt-10">
         {data[1]?.contents?.twoColumnWatchNextResults?.secondaryResults?.secondaryResults?.results?.map(
-          (result, index) => {
+          (result: SecondaryResult, index) => {
             const video = result?.compactVideoRenderer;
             if (!video) return null; // Skip this item if it doesn't have compactVideoRenderer
 
@@ -160,44 +205,40 @@ async function Page({ searchParams }: Props) {
                   />
                   <div className="absolute right-2 bottom-2 bg-black rounded-md text-white py-0.5 px-1.5 text-xs">
                     {video?.lengthText?.simpleText}
-                  </div>
-                </Link>
-                <div className="flex flex-1 flex-col gap-1">
-                  <h2 className="text-lg line-clamp-2">
-                    {video?.title?.simpleText}
-                  </h2>
-                  <span className="text-sm text-secondary-text">
-                    {/* {video?.viewCountText?.simpleText} •{" "} */}
-                    {
-                      video?.shortViewCountText?.accessibility
-                        ?.accessibilityData?.label
-                    }{" "}
-                    • {video?.publishedTimeText?.simpleText}
-                  </span>
-                  <Link
-                    href={`/channel/${video?.longBylineText?.runs[0]?.navigationEndpoint?.browseEndpoint?.browseId}`}
-                  >
-                    <div className="flex items-center gap-2 my-2">
-                      <Image
-                        src={video?.channelThumbnail?.thumbnails[0]?.url}
-                        width={24}
-                        height={24}
-                        alt="channel_avatar"
-                        className="rounded-full"
-                      />
-                      <span className="text-sm text-secondary-text line-clamp-1">
-                        {video?.longBylineText?.runs[0]?.text}
-                      </span>
-                    </div>
-                  </Link>
-                </div>
-              </li>
-            );
-          }
-        )}
-      </ul>
-    </div>
-  );
+</div>
+</Link>
+<div className="flex flex-1 flex-col gap-1">
+<h2 className="text-lg line-clamp-2">
+{video?.title?.simpleText}
+</h2>
+<span className="text-sm text-secondary-text">
+{video?.shortViewCountText?.accessibility
+?.accessibilityData?.label}{" "}
+• {video?.publishedTimeText?.simpleText}
+</span>
+<Link
+href={/channel/${video?.longBylineText?.runs[0]?.navigationEndpoint?.browseEndpoint?.browseId}}
+>
+<div className="flex items-center gap-2 my-2">
+<Image
+                     src={video?.channelThumbnail?.thumbnails[0]?.url}
+                     width={24}
+                     height={24}
+                     alt="channel_avatar"
+                     className="rounded-full"
+                   />
+<span className="text-sm text-secondary-text line-clamp-1">
+{video?.longBylineText?.runs[0]?.text}
+</span>
+</div>
+</Link>
+</div>
+</li>
+);
 }
-
+)}
+</ul>
+</div>
+);
+}
 export default Page;
